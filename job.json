@@ -1,0 +1,22 @@
+{
+    "max_workers": 2,
+    "max_previous_topics": 5,
+    "context": "Advanced Study of Neural Information Retrieval and RAG with LLMs",
+    "json_per_perspective": 2,
+    "perspectives": [
+        "Foque nos fundamentos teóricos de Neural Information Retrieval, incluindo modelos de linguagem, representação vetorial, similaridade semântica, e as bases matemáticas de embedding spaces e information retrieval.",
+        "Foque nos algoritmos e arquiteturas fundamentais para RAG, incluindo dense retrievers, sparse retrievers, hybrid approaches, reranking, e técnicas de otimização de retrieval como knowledge distillation e contrastive learning.",
+        "Foque nos aspectos práticos de implementação e deployment, incluindo indexação eficiente, técnicas de chunking, prompt engineering para RAG, estratégias de context injection, e otimização de performance em sistemas de larga escala."
+    ],
+    "directory": ".",
+    "target_folders": [],
+    "excluded_folders": [],
+    "tasks": [
+        "cleanup",
+        "generate_logical_steps",
+        "generate_examples",
+        "inject_images",
+        "format_math",
+        "cleanup"
+    ]
+}

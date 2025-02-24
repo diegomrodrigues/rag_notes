@@ -100,15 +100,8 @@ class ModelUtilsMixin:
             raise AttributeError("Model not initialized. Call init_model() first.")
 
         uploaded_files = []
-        mime_types = {
-            '.pdf': 'application/pdf',
-            '.png': 'image/png',
-            '.jpg': 'image/jpeg',
-            '.jpeg': 'image/jpeg',
-        }
         for file_path in files:
-            mime_type = mime_types.get(file_path.suffix.lower())
-            uploaded_file = self.model.upload_file(str(file_path), mime_type=mime_type)
+            uploaded_file = self.model.upload_file(str(file_path))
             uploaded_files.append(uploaded_file)
         return uploaded_files
 

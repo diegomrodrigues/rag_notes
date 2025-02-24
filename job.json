@@ -14,7 +14,7 @@
     "tasks": [
         "cleanup",
         "generate_logical_steps",
-        "generate_examples",
+        "rag_examples",
         "inject_images",
         "format_math",
         "cleanup"

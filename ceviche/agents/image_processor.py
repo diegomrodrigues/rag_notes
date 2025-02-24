@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Dict, Any
 from ceviche.core.agent import Agent
 from ceviche.core.context import Context
+import fitz  # PyMuPDF for PDF processing
 
 class ImageProcessorAgent(Agent):
     """Processes images within directory structures and generates metadata."""
@@ -27,6 +28,18 @@ class ImageProcessorAgent(Agent):
             if self.debug:
                 print(f"Starting image processing in: {base_dir}")
             
+            # Check if images directory exists and create if needed
+            images_dir = base_dir / "images"
+            if not images_dir.exists():
+                if self.debug:
+                    print("Images directory not found. Creating and extracting from PDF...")
+                images_dir.mkdir(exist_ok=True)
+                pdf_path = self._find_pdf_file(base_dir)
+                if pdf_path:
+                    self._extract_images_from_pdf(pdf_path, images_dir)
+                else:
+                    print("⚠️ No PDF file found to extract images from")
+            
             # Get the process_images workflow
             process_images_workflow = self.get_workflow("process_images", ctx, args)
             
@@ -44,6 +57,34 @@ class ImageProcessorAgent(Agent):
                 
         except Exception as e:
             print(f"❌ Image processing failed: {str(e)}")
+            raise
+
+    def _extract_images_from_pdf(self, pdf_path: str, output_dir: Path) -> None:
+        """Extract all images from PDF and save them to the output directory."""
+        try:
+            pdf_document = fitz.open(pdf_path)
+            
+            for page_num in range(len(pdf_document)):
+                page = pdf_document[page_num]
+                image_list = page.get_images()
+                
+                for img_idx, img in enumerate(image_list):
+                    xref = img[0]
+                    base_image = pdf_document.extract_image(xref)
+                    image_bytes = base_image["image"]
+                    image_ext = base_image["ext"]
+                    
+                    image_name = f"page_{page_num + 1}_img_{img_idx + 1}.{image_ext}"
+                    image_path = output_dir / image_name
+                    
+                    with open(image_path, "wb") as img_file:
+                        img_file.write(image_bytes)
+                        
+            if self.debug:
+                print(f"Successfully extracted images from PDF: {pdf_path}")
+                
+        except Exception as e:
+            print(f"❌ Failed to extract images from PDF: {str(e)}")
             raise
 
     def _find_pdf_file(self, directory: Path) -> str:

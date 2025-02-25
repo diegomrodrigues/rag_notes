@@ -101,6 +101,7 @@ class ModelUtilsMixin:
 
         uploaded_files = []
         for file_path in files:
+            print(f"Uploading file: {str(file_path)}")
             uploaded_file = self.model.upload_file(str(file_path))
             uploaded_files.append(uploaded_file)
         return uploaded_files

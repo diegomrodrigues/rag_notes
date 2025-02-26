@@ -1,0 +1,117 @@
+{
+  "topics": [
+    {
+      "topic": "Introduction to RAG",
+      "sub_topics": [
+        "Retrieval Augmented Generation (RAG) is a dominant architecture for LLM-based systems that enhances Large Language Models (LLMs) by grounding their responses with information retrieved from external data sources. It combines search algorithms and LLM prompting, injecting both the query and retrieved context into the prompt sent to the LLM. This improves the quality and relevance of LLM outputs, addressing limitations related to knowledge cut-offs and hallucinations.",
+        "RAG powers question answering and chat applications, integrating web search engines with LLMs and enabling chat-with-your-data applications. Open-source libraries like LangChain and LlamaIndex provide tools for building LLM-based pipelines and applications, facilitating RAG implementation.",
+        "The rise in popularity of RAG has driven the development of vector search, leading to the emergence of vector database startups built on existing open-source search indices like Faiss and Nmslib, enhanced with extra storage and tooling for input texts. This development occurred despite embedding-based search engines existing since 2019."
+      ]
+    },
+    {
+      "topic": "Naive RAG",
+      "sub_topics": [
+        "The vanilla RAG process involves segmenting texts into chunks, converting these chunks into vectors using Transformer Encoder models, indexing these vectors, and creating prompts for LLMs that instruct the model to answer queries based on the retrieved context.",
+        "At runtime, the user's query is vectorized using the same Encoder model, searched against the index to find the top-k results, and the corresponding text chunks from the database are used to enrich the LLM prompt as context. The selection of an appropriate Transformer Encoder model is crucial, as it directly affects the quality of vector embeddings and search results.",
+        "Prompt engineering, which involves optimizing the prompt structure and content, is a cost-effective way to enhance the RAG pipeline. Various LLM providers, including OpenAI, Anthropic (Claude), Mistral (Mixtral), Microsoft (Phi-2), and open-source options like Llama2, OpenLLaMA, and Falcon, offer models that can be selected for the RAG pipeline."
+      ]
+    },
+    {
+      "topic": "Chunking and Vectorization",
+      "sub_topics": [
+        "Chunking involves splitting initial documents into segments of appropriate size to maintain semantic meaning, while fitting within the fixed input sequence length of transformer models.  Text splitter implementations are used for tasks like sentence or paragraph separation.",
+        "The size of the chunk is a crucial parameter that depends on the embedding model, balancing the need for sufficient context for the LLM with the specificity of text embeddings for efficient search. BERT-based Sentence Transformers have a 512-token limit, while OpenAI's ada-002 can handle longer sequences.",
+        "Vectorization entails selecting a model to embed the chunks. Search-optimized models such as bge-large or the E5 embeddings family are often preferred, and the MTEB leaderboard can be used to compare model performance. Creating an index of vectors is fundamental, representing document content and queries as vectors. During runtime, the system searches for the smallest cosine distance between these vectors to identify the closest semantic meaning.",
+        "Tools like LlamaIndex's NodeParser class offer advanced options for defining text splitters, incorporating metadata, and managing node/chunk relations. End-to-end data ingestion pipelines integrate chunking and vectorization to prepare content for the RAG system."
+      ]
+    },
+    {
+      "topic": "Search Index",
+      "sub_topics": [
+        "The search index stores vectorized content. A naive implementation uses a flat index for brute force distance calculation.  A proper search index, optimized for efficient retrieval on large-scale datasets (10000+ elements), employs vector indices like Faiss, Nmslib, or Annoy, using Approximate Nearest Neighbors (ANN) algorithms (clustering, trees, or HNSW).",
+        "Managed solutions like OpenSearch, ElasticSearch, and vector databases (Pinecone, Weaviate, Chroma) handle data ingestion and provide efficient search indexing.",
+        "Metadata can be stored alongside vectors to enable metadata filters, allowing for searches that consider data attributes like date or source. Hierarchical indexing enhances efficiency in large databases by creating two indices\u2014one for summaries and one for document chunks\u2014to initially filter relevant documents by summaries before performing detailed searches, reducing computational load.",
+        "The Hypothetical Questions and HyDE technique uses an LLM to generate questions for each chunk, embedding them into vectors to enhance retrieval by improving semantic similarity between the query and indexed vectors."
+      ]
+    },
+    {
+      "topic": "Context Enrichment",
+      "sub_topics": [
+        "Context enrichment focuses on improving search quality by retrieving smaller chunks and supplementing them with surrounding context for the LLM. This can be achieved by expanding the context with neighboring sentences or recursively splitting documents into parent and child chunks.",
+        "Sentence Window Retrieval embeds each sentence separately for high accuracy in query-to-context cosine distance searches, extending the context window around the most relevant sentence before feeding it to the LLM.",
+        "Auto-merging Retriever (also known as Parent Document Retriever) searches for granular pieces of information and extends the context window by splitting documents into smaller child chunks that reference larger parent chunks, feeding this extended context to the LLM for reasoning."
+      ]
+    },
+    {
+      "topic": "Retrieval Enhancement Techniques",
+      "sub_topics": [
+        "Fusion retrieval, or hybrid search, combines keyword-based search methods (like tf-idf or BM25) with semantic or vector search to improve retrieval results. The Reciprocal Rank Fusion (RRF) algorithm is commonly used to re-rank retrieved results from different retrieval methods, addressing the challenge of integrating diverse similarity scores.",
+        "LangChain implements fusion retrieval with the Ensemble Retriever class, combining different retrievers and using RRF for reranking. LlamaIndex provides a similar implementation.",
+        "Reranking and filtering refine initial retrieval results through techniques like filtering based on similarity score, keywords, or metadata, and reranking them with models such as LLMs or sentence-transformer cross-encoders. LlamaIndex offers a variety of postprocessors for these tasks. This is the final step before feeding the refined context to the LLM."
+      ]
+    },
+    {
+      "topic": "Query Transformations",
+      "sub_topics": [
+        "Query transformations utilize LLMs to modify user input and improve retrieval quality. Techniques include query decomposition, step-back prompting, and query re-writing.",
+        "If the query is complex, the LLM can decompose it into simpler sub-queries that facilitate more concrete information retrieval, executed in parallel to synthesize a final answer. This is implemented as a Multi Query Retriever in Langchain and as a Sub Question Query Engine in Llamaindex.",
+        "Step-back prompting involves using the LLM to generate a more general query, retrieving high-level context to ground the answer to the original query. Query re-writing uses LLMs to reformulate initial queries, and LlamaIndex's solution is particularly noted for its robustness."
+      ]
+    },
+    {
+      "topic": "RAG with Agents",
+      "sub_topics": [
+        "Agents augment LLMs with reasoning capabilities, tools, and tasks, allowing them to perform deterministic functions using code, external APIs, or other agents. This concept forms the foundation of LLM chaining.",
+        "OpenAI Assistants implement tools around an LLM, including chat history, knowledge storage, document uploading interfaces, and function calling APIs, enabling the conversion of natural language into API calls for external tools and database queries.",
+        "Multi-Document Agents involve initializing agents on each document, capable of summarization and QA. A top agent is responsible for routing queries and synthesizing final answers. This architecture facilitates comparing solutions described in different documents, providing a framework for complex, multi-source QA."
+      ]
+    },
+    {
+      "topic": "Fine-tuning in RAG",
+      "sub_topics": [
+        "Fine-tuning the Transformer Encoder improves embedding quality and context retrieval, while fine-tuning the LLM enhances its ability to utilize provided context. Models like GPT-4 can generate high-quality synthetic datasets for fine-tuning, but caution is advised against narrowing the model's capabilities through over-specific tuning.",
+        "Encoder fine-tuning has demonstrated retrieval quality increases, especially for narrow domain datasets. Ranker fine-tuning utilizes a cross-encoder to re-rank retrieved results, improving pairwise scores.",
+        "LLM fine-tuning has become popular since OpenAI started providing an LLM finetuning API, and LlamaIndex also has implemented it. Frameworks like ragas are used for RAG pipeline evaluation, showing increased faithfulness metrics when using a fine-tuned model."
+      ]
+    },
+    {
+      "topic": "Evaluation of RAG Systems",
+      "sub_topics": [
+        "Frameworks for RAG system performance evaluation assess answer relevance, groundedness, faithfulness, and context relevance, evaluating overall system performance.",
+        "The RAG triad framework suggests evaluating retrieved context relevance to the query, groundedness of the answer, and answer relevance to the query. More advanced approaches consider not only hit rate but also Mean Reciprocal Rank (MRR).",
+        "Metrics include faithfulness and answer relevance for answer quality, and context precision and recall for retrieval quality. Tools like LangChain's LangSmith and LlamaIndex's rag_evaluator provide advanced evaluation frameworks and transparent monitoring of RAG pipelines."
+      ]
+    },
+    {
+      "topic": "Chat Engine",
+      "sub_topics": [
+        "Chat engines incorporate chat logic and dialogue context to support follow-up questions and user commands, solved via query compression techniques. The key idea is taking into account the dialogue context when responding to a query.",
+        "ContextChatEngine retrieves context relevant to the query and sends it with chat history. CondensePlusContextMode condenses chat history and the last message into a new query, retrieving context and passing it to the LLM along with the original user message.",
+        "Support for OpenAI agents-based Chat Engine in LlamaIndex and OpenAI functional API in Langchain offers flexible chat modes, enabling knowledge-based conversations."
+      ]
+    },
+    {
+      "topic": "Query Routing",
+      "sub_topics": [
+        "Query routing uses LLM-powered decision-making to determine the next course of action based on the user query, such as summarizing, searching against a data index, or trying different routes to synthesize a single answer.",
+        "Query routers select appropriate indexes or data stores, such as vector stores, graph databases, or hierarchical indexes, based on the user query and the structure of the available data.",
+        "Defining the query router involves setting up choices for the LLM to make. The selection of a routing option is performed with an LLM call, used to route the query to a given index or sub-chains. Both LlamaIndex and LangChain support query routers."
+      ]
+    },
+    {
+      "topic": "Response Synthesis",
+      "sub_topics": [
+        "Response synthesis is the final step in the RAG pipeline, where an answer is generated based on the retrieved context and the initial user query.",
+        "A simple approach involves concatenating all fetched context with the query and feeding it to the LLM. More sophisticated options involve multiple LLM calls to refine the context and generate a better answer.",
+        "Approaches include iteratively refining the answer chunk by chunk, summarizing the retrieved context, or generating multiple answers based on different context chunks and concatenating/summarizing them."
+      ]
+    },
+    {
+      "topic": "Reference Citations",
+      "sub_topics": [
+        "Reference citations focus on accurately referencing the sources used to generate an answer when multiple sources are used, especially important when answering a question.",
+        "Methods include inserting referencing tasks into prompts, asking the LLM to cite its sources, and matching parts of the generated response to original text chunks using fuzzy matching techniques."
+      ]
+    }
+  ]
+}

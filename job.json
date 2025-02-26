@@ -9,7 +9,9 @@
         "Foque nos aspectos práticos de implementação e deployment, incluindo indexação eficiente, técnicas de chunking, prompt engineering para RAG, estratégias de context injection, e otimização de performance em sistemas de larga escala."
     ],
     "directory": "06. RAG Patterns",
-    "target_folders": [],
+    "target_folders": [
+        "03. Survey of Techniques"
+    ],
     "excluded_folders": [],
     "tasks": [
         "cleanup",

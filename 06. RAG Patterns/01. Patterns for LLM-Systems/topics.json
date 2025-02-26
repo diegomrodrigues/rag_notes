@@ -1,0 +1,14 @@
+{
+  "topics": [
+    {
+      "topic": "Guardrails: To Ensure Output Quality",
+      "sub_topics": [
+        "Guardrails validate the output of LLMs, ensuring that it is syntactically correct, factual, and free of harmful content, as well as protecting against adversarial inputs.",
+        "Syntactic validation covers model output validation and structural checks.",
+        "Control techniques include guided prompts to generate useful, harmless, and honest answers, and output validation through structural, type, and quality requirements.",
+        "Types of guardrails include structural guidance, syntactic and content safety guardrails, as well as semantic and factuality guardrails and input guardrails.",
+        "Using another LLM to verify the consistency and safety of the generated content, as well as to detect jailbreaking attempts, is a common practice."
+      ]
+    }
+  ]
+}
